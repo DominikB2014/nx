@@ -215,15 +215,15 @@ forEachCli((cli) => {
     });
   });
 
-  describe('workspace-schematic', () => {
+  describe('workspace-generator', () => {
     let custom: string;
     let failing: string;
 
     beforeEach(() => {
       custom = uniq('custom');
       failing = uniq('custom-failing');
-      runCLI(`g workspace-schematic ${custom} --no-interactive`);
-      runCLI(`g workspace-schematic ${failing} --no-interactive`);
+      runCLI(`g workspace-generator ${custom} --no-interactive`);
+      runCLI(`g workspace-generator ${failing} --no-interactive`);
 
       checkFilesExist(
         `tools/schematics/${custom}/index.ts`,
@@ -264,7 +264,7 @@ forEachCli((cli) => {
       });
 
       runCommand(
-        `nx workspace-schematic ${custom} ${workspace} --no-interactive -d`
+        `nx workspace-generator ${custom} ${workspace} --no-interactive -d`
       );
 
       expect(() =>
@@ -305,14 +305,14 @@ forEachCli((cli) => {
 
       const workspace = uniq('workspace');
       const dryRunOutput = runCLI(
-        `workspace-schematic ${custom} ${workspace} --no-interactive --directory=dir --skipTsConfig=true -d`
+        `workspace-generator ${custom} ${workspace} --no-interactive --directory=dir --skipTsConfig=true -d`
       );
       expect(exists(`libs/dir/${workspace}/src/index.ts`)).toEqual(false);
       expect(dryRunOutput).toContain(`UPDATE ${workspaceConfigName()}`);
       expect(dryRunOutput).toContain('UPDATE nx.json');
 
       const output = runCLI(
-        `workspace-schematic ${custom} ${workspace} --no-interactive --directory=dir`
+        `workspace-generator ${custom} ${workspace} --no-interactive --directory=dir`
       );
       checkFilesExist(`libs/dir/${workspace}/src/index.ts`);
       expect(output).toContain(`UPDATE ${workspaceConfigName()}`);
@@ -336,12 +336,12 @@ forEachCli((cli) => {
       );
 
       try {
-        await runCLI(`workspace-schematic ${failing} --no-interactive`);
-        fail(`Should exit 1 for a workspace-schematic that throws an error`);
+        await runCLI(`workspace-generator ${failing} --no-interactive`);
+        fail(`Should exit 1 for a workspace-generator that throws an error`);
       } catch (e) {}
 
       const listSchematicsOutput = runCLI(
-        'workspace-schematic --list-schematics'
+        'workspace-generator --list-schematics'
       );
       expect(listSchematicsOutput).toContain(custom);
       expect(listSchematicsOutput).toContain(failing);
